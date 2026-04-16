@@ -19,7 +19,7 @@ login_manager.login_view = "auth.signup"
 login_manager.login_message=""
 
 
-def create_app(config_key):
+def create_app(config_key="local"):
     # 플라스크 인스턴스 생성
     app = Flask(__name__)
 
@@ -56,5 +56,11 @@ def create_app(config_key):
 
     # register_blueprint를 사용해 views의 auth를 앱에 등록한다
     app.register_blueprint(auth_views.auth, url_prefix="/auth")
+
+    # 이제부터 작성하는 detector 패키지로부터 views를 import한다
+    from apps.detector import views as dt_views
+
+    # register_blueprint를 사용해 views의 dt를 앱에 등록한다
+    app.register_blueprint(dt_views.dt)
 
     return app
