@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
-
+from flask_login import login_required
 # db를 import한다
 from apps.app import db
 # User 클래스를 import한다
@@ -16,10 +16,12 @@ crud = Blueprint(
 
 # index 엔드포인트를 작성하고 index.html을 반환한다.
 @crud.route("/")
+@login_required
 def index():
     return render_template("crud/index.html")
 
 @crud.route("/sql")
+@login_required
 def sql():
     db.session.query(User).all()
     # 모델 객체 이용하는 방법도 있음
@@ -27,6 +29,7 @@ def sql():
     return "콘솔 로그를 확인해 주세요"
 
 @crud.route("/users/new", methods=["GET","POST"])
+@login_required
 def create_user():
     # UserForm을 인스턴스화한다
     form = UserForm()
@@ -46,12 +49,14 @@ def create_user():
     return render_template("crud/create.html", form=form)
 
 @crud.route("/users")
+@login_required
 def users():
     """사용자의 일람을 취득한다"""
     user = User.query.all()
     return render_template("crud/index.html",users=user)
 
 @crud.route("/users/<int:user_id>", methods=["GET","POST"])
+@login_required
 def edit_user(user_id):
     form = UserForm()
 
@@ -71,6 +76,7 @@ def edit_user(user_id):
     return render_template("crud/edit.html", user=user, form=form)
 
 @crud.route("/users/<int:user_id>/delete", methods=["POST"])
+@login_required
 def delete_user(user_id):
     user=User.query.filter_by(id=user_id).first()
     db.session.delete(user)
