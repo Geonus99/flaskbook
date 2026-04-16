@@ -1,9 +1,10 @@
 from datetime import datetime
-from apps.app import db
-from werkzeug.security import generate_password_hash
+from apps.app import db, login_manager
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # db.Model을 상속한 User 클래스를 작성한다.
-class User(db.Model):
+class User(db.Model, UserMixin):
     # 테이블 명의 지정한다.
     __tablename__ = "users"
     # 칼럼의 정의한다.
@@ -27,3 +28,15 @@ class User(db.Model):
     @password.setter
     def password(self, password):
         self.password_hash = generate_password_hash(password)
+
+    # 비밀번호 체크를 한다
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    # 이메일 주소 중복 체크를 한다
+    def is_duplicate_email(self):
+        return User.query.filter_by(email=self.email).first() is not None
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
