@@ -11,6 +11,8 @@ dt = Blueprint("detector", __name__, template_folder="templates")
 def index():
     # User와 UserImage를 Join해서 이미지 일람을 취득한다
     user_images = (
-        db.session.query(User, UserImage).join(UserImage).filter(User.id==UserImage.user_id).all()
+    db.session.query(User, UserImage)
+    .join(UserImage, User.id == UserImage.user_id)
+    .all()
     )
     return render_template("detector/index.html", user_images=user_images)
