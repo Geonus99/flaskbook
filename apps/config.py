@@ -6,6 +6,7 @@ basedir = Path(__file__).parent.parent
 class BaseConfig:
     SECRET_KEY = "2ADF213fbaar3J"
     WTF_CSRF_SECRET_KEY = "ASDASXCafdsasfe"
+    UPLOAD_FOLDER = str(Path(basedir, "apps", "images"))
 
 # BaseConfig 클래스를 상속하여 LocalConfig 클래스를 작성한다
 class LocalConfig(BaseConfig):
